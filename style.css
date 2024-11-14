@@ -1,0 +1,81 @@
+.lessons-container{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.lesson-box{
+    display: flex;
+    width: 300px;
+    height: 200px;
+    border: 1px solid #000;
+    padding: 10px;
+    background-color: #f3eeee;
+    text-align: center;
+    box-shadow: 2px 2px 10px rgba(0,0,0,0.1);
+    margin: 20px auto;
+    border-radius: 10px;
+    border-color: brown;
+}
+
+.lesson-info{
+    flex: 1;
+}
+
+.lesson-image {
+    display: flex;
+    align-items: center;
+    object-fit: cover;
+}
+.lesson-image img{
+    width: 140px;
+    height: 120px;
+    object-fit: cover;
+}
+
+label{
+    display: block; /*to ensure that labels are on separate lines*/
+    margin-bottom: 10px;
+}
+
+.sort-order{
+    margin-top: 20px;
+}
+
+.shopping-cart{
+    float: right;
+}
+
+button{
+    background-color: rgb(127, 180, 255);
+    width: 100px;
+    height: 25px;
+    border: 70px;
+    cursor: pointer;
+}
+
+.lesson-info button{
+    width: 100px;
+    transition: all 0.5s;
+    margin: 5px;
+}
+
+.lesson-info button span{
+    display: inline-block;
+    position: relative;
+    transition: 0.5s;
+}
+.lesson-info button span:after{
+    content: '\00bb';
+    position: relative;
+    opacity: 0;
+    top: 0;
+    padding-left: 5px;
+    transition: 0.5s;
+}
+.lesson-info button:hover span{
+    transform: translateX(-5px);
+}
+.lesson-info button:hover span:after{
+    opacity: 1;
+}

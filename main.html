@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://unpkg.com/vue@2.7.8/dist/vue.js"></script>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <title>Learn Beyond</title>
+</head>
+
+<body>
+    <div id="webstore">
+        <header>
+            <h2>{{ message }}</h2>
+            <!--search bar-->
+            <div class="search-container">
+                <input type="text" class="search-bar" placeholder="Search...">
+                <button class="search-button"><i class="fa-solid fa-magnifying-glass"></i>Search</button>
+            </div>
+        </header>
+
+        <main>
+            <!---lessons container-->
+            <div class="lessons-container" v-if="showLesson">
+                <div>
+                    <p><strong>Sort by:</strong></p>
+                    <label>
+                        <input type="checkbox" v-model="sortkey" value="subject"> Subject
+                    </label>
+
+                    <label>
+                        <input type="checkbox" v-model="sortkey" value="location"> Location
+                    </label>
+
+                    <label>
+                        <input type="checkbox" v-model="sortkey" value="price">Price
+                    </label>
+
+                    <label>
+                        <input type="checkbox" v-model="sortkey" value="spaces">Availability
+                    </label>
+
+                    <div class="sort-order">
+                        <label>
+                            <input type="radio" v-model="order" value="ascending">Ascending
+                        </label>
+                        <label>
+                            <input type="radio" v-model="order" value="descending">Descending
+                        </label>
+                    </div>
+
+                </div>
+                <!--lessons details inside the boxes-->
+                <div class="lesson-box" v-for="lesson in lessons">
+                    <div class="lesson-info">
+                        <h4>Subject: {{ lesson.subject }}</h4>
+                        <p>Location: {{ lesson.location }}</p>
+                        <p>Price: {{ lesson.price }}</p>
+                        <p>Spaces: {{ lesson.spaces }}</p>
+                        <button><span>Add to cart</span> </button>
+                    </div>
+                    <div class="lesson-image">
+                        <img :src="lesson.image" alt="lesson image">
+                    </div>
+                </div>
+
+
+            </div>
+
+            <div class="shopping-cart">
+                <button v-on:click="showCart">
+
+                    <i class="fa-solid fa-cart-shopping"></i>Cart
+                </button>
+            </div>
+            <!--show shopping cart page-->
+            <div v-else>
+                <h1>Your purchase</h1>
+
+            </div>
+        </main>
+
+
+    </div>
+
+
+    <script>
+        let webstore = new Vue({
+            el: "#webstore",
+            data: {
+                message: 'After School Classes',
+                showLesson: true,
+                lessons: [
+                    {
+                        subject: 'Math',
+                        location: 'London',
+                        price: '100',
+                        spaces: '5',
+                        image: 'images/math.jpg'
+                    },
+                    {
+                        subject: 'Math',
+                        location: 'Oxford',
+                        price: '100',
+                        spaces: '5',
+                        image: 'images/math.jpg'
+                    },
+                    {
+                        subject: 'English',
+                        location: 'London',
+                        price: '100',
+                        spaces: '5',
+                        image: 'images/english.jpg'
+                    },
+                    {
+                        subject: 'English',
+                        location: 'York',
+                        price: '80',
+                        spaces: '5',
+                        image: 'images/english.jpg'
+                    },
+                    {
+                        subject: 'Music',
+                        location: 'Bristol',
+                        price: '90',
+                        spaces: '5',
+                        image: 'images/music.jpg'
+                    }
+                ]
+
+
+            },
+            methods: {
+                showCart() {
+                    if (this.showLesson) {
+                        this.showLesson = false;
+                    } else {
+                        this.showLesson = true;
+                    }
+                }
+            }
+
+        })
+    </script>
+</body>
+
+</html>

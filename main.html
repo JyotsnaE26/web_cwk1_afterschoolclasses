@@ -16,7 +16,7 @@
             <h2>{{ message }}</h2>
             <!--search bar-->
             <div class="search-container">
-                <input type="text" class="search-bar" placeholder="Search...">
+                <input v-model="searchTerm" type="text" class="search-bar" placeholder="Search...">
                 <button class="search-button"><i class="fa-solid fa-magnifying-glass"></i>Search</button>
             </div>
         </header>
@@ -27,39 +27,39 @@
                 <div>
                     <p><strong>Sort by:</strong></p>
                     <label>
-                        <input type="checkbox" v-model="sortkey" value="subject"> Subject
+                        <input type="checkbox" v-model="sortKeys" value="subject"> Subject
                     </label>
 
                     <label>
-                        <input type="checkbox" v-model="sortkey" value="location"> Location
+                        <input type="checkbox" v-model="sortKeys" value="location"> Location
                     </label>
 
                     <label>
-                        <input type="checkbox" v-model="sortkey" value="price">Price
+                        <input type="checkbox" v-model="sortKeys" value="price">Price
                     </label>
 
                     <label>
-                        <input type="checkbox" v-model="sortkey" value="spaces">Availability
+                        <input type="checkbox" v-model="sortKeys" value="spaces">Availability
                     </label>
 
                     <div class="sort-order">
                         <label>
-                            <input type="radio" v-model="order" value="ascending">Ascending
+                            <input type="radio" v-model="sortOrder" value="ascending">Ascending
                         </label>
                         <label>
-                            <input type="radio" v-model="order" value="descending">Descending
+                            <input type="radio" v-model="sortOrder" value="descending">Descending
                         </label>
                     </div>
 
                 </div>
                 <!--lessons details inside the boxes-->
-                <div class="lesson-box" v-for="lesson in lessons">
+                <div class="lesson-box" v-for="lesson in filteredData" :key="lesson.subject">
                     <div class="lesson-info">
                         <h4>Subject: {{ lesson.subject }}</h4>
                         <p>Location: {{ lesson.location }}</p>
                         <p>Price: {{ lesson.price }}</p>
                         <p>Spaces: {{ lesson.spaces }}</p>
-                        <button><span>Add to cart</span> </button>
+                        <button :disabled="lesson.spaces === 0" @click="addToCart(lesson)" ><span>Add to cart</span> </button>
                     </div>
                     <div class="lesson-image">
                         <img :src="lesson.image" alt="lesson image">
@@ -68,17 +68,27 @@
 
 
             </div>
-
+            <!-- shopping cart page -->
             <div class="shopping-cart">
                 <button v-on:click="showCart">
-
-                    <i class="fa-solid fa-cart-shopping"></i>Cart
+                    <i class="fa-solid fa-cart-shopping"></i>Cart ({{cartCount}})
                 </button>
             </div>
             <!--show shopping cart page-->
             <div v-else>
                 <h1>Your purchase</h1>
-
+                <div v-if="cart.length > 0">
+                    <div v-for="(item, index) in cart" :key="index" class="cart-item"> 
+                        <h4>Subject: {{ item.subject }}</h4>
+                        <p>Location: {{ item.location }}</p>
+                        <p>Price: {{ item.price }}</p>
+                        <p>Spaces: {{ item.spaces }}</p>
+                    </div>
+                </div>
+                <button>Checkout</button>
+                <div v-else>
+                    <p>Your cart is empty</p>
+                </div>
             </div>
         </main>
 
@@ -91,56 +101,96 @@
             el: "#webstore",
             data: {
                 message: 'After School Classes',
+                sortKeys : [],
+                sortOrder: 'ascending',
+                sortBy: 'subject',
                 showLesson: true,
+                showCheckout: false,
+                searchTerm:"",
+                cart:[],
+                cartCount: 0,
                 lessons: [
                     {
-                        subject: 'Math',
-                        location: 'London',
-                        price: '100',
-                        spaces: '5',
-                        image: 'images/math.jpg'
+                        subject: 'Math', location: 'London', price: '100', spaces: '5', image: 'images/math.jpg'
                     },
                     {
-                        subject: 'Math',
-                        location: 'Oxford',
-                        price: '100',
-                        spaces: '5',
-                        image: 'images/math.jpg'
+                        subject: 'Math', location: 'Oxford', price: '100', spaces: '5', image: 'images/math.jpg'
                     },
                     {
-                        subject: 'English',
-                        location: 'London',
-                        price: '100',
-                        spaces: '5',
-                        image: 'images/english.jpg'
+                        subject: 'English', location: 'London', price: '100', spaces: '5', image: 'images/english.jpg'
                     },
                     {
-                        subject: 'English',
-                        location: 'York',
-                        price: '80',
-                        spaces: '5',
-                        image: 'images/english.jpg'
+                        subject: 'English', location: 'York', price: '80', spaces: '5', image: 'images/english.jpg'
                     },
                     {
-                        subject: 'Music',
-                        location: 'Bristol',
-                        price: '90',
-                        spaces: '5',
-                        image: 'images/music.jpg'
+                        subject: 'Music', location: 'Bristol', price: '90', spaces: '5', image: 'images/music.jpg'
+                    },
+                    {
+                        subject: 'Art', location: 'Middlesex', price: '150', spaces: '5', image: ''
+                    },
+                    {
+                        subject: 'French', location: 'Oxford', price: '200', spaces: '5', image: ''
+                    },
+                    {
+                        subject: 'Art', location: 'York', price: '120', spaces: '5', image: ''
+                    },
+                    {
+                        subject: 'Social Studies', location: 'London', price: '250', spaces: '5', image: ''
                     }
-                ]
-
+                ],
+                //sortedLessons: []
 
             },
+            
             methods: {
-                showCart() {
-                    if (this.showLesson) {
-                        this.showLesson = false;
-                    } else {
-                        this.showLesson = true;
+                // toggle visibility of cart and lessons view
+                showCart() {  
+                    this.showLesson = !this.showLesson;
+                },
+                addToCart(lesson){
+                    if (lesson.spaces> 0){
+                        this.cartCount += 1;
+                        this.cart.push(lesson);
+                        lesson.spaces -= 1;
+                    } else{
+                        alert("no more spaces left for this lesson!");
                     }
+                    
+                }
+            },
+computed: {
+    sortedLessons() {
+        // if no sort keys are selected, return lessons without sorting
+        if (this.sortKeys.length === 0) return this.lessons;
+        // Copy the array to avoid modifying the original lessons array
+        return this.lessons.slice().sort((a, b) => {
+            // Define sort functions for each criterion
+            const sortFunctions = {
+                subject: (a, b) => a.subject.localeCompare(b.subject),
+                location: (a, b) => a.location.localeCompare(b.location),
+                price: (a, b) => a.price - b.price,
+                spaces: (a, b) => a.spaces - b.spaces,
+            };
+
+            // Apply each selected criterion in sequence
+            for (const key of this.sortKeys) {
+                const result = sortFunctions[key](a, b);
+                if (result !== 0) {
+                    // Adjust the result based on sortOrder
+                    return this.sortOrder === 'ascending' ? result : -result;
                 }
             }
+
+            // If all criteria are equal, return 0
+            return 0;
+        });
+    },
+    filteredData(){
+        return this.sortedLessons.filter((item)=>
+            item.subject.toLowerCase().includes(this.searchTerm.toLowerCase())
+        );
+    }
+}
 
         })
     </script>

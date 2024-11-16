@@ -68,28 +68,41 @@
 
 
             </div>
+            
+            <!--show shopping cart page-->
+            <div v-else-if="!showLesson && !showCheckout">
+                <h1>Your purchase</h1>
+                <div v-if="cart.length > 0">
+                    <div class="lesson-box" v-for="(item, index) in cart" :key="index"> 
+                        <div class="lesson-info">
+                            <h4>Subject: {{ item.subject }}</h4>
+                            <p>Location: {{ item.location }}</p>
+                            <p>Price: {{ item.price }}</p>
+                            <p>Spaces: {{ item.spaces }}</p>
+                            <button @click="removeFromCart(item, index) ">Remove</button>
+                        </div> 
+                        <div class="lesson-image">
+                            <img :src="item.image" alt="lesson image">
+                        </div>
+                    </div>
+                </div>
+                <button @click="showCheckoutPage">Checkout</button>
+                <div v-else>
+                    <p>Your cart is empty</p>
+                </div>
+            </div>
+
+            <div v-else>
+                <h1>Checkout</h1>
+            </div>
+
             <!-- shopping cart page -->
             <div class="shopping-cart">
                 <button v-on:click="showCart">
                     <i class="fa-solid fa-cart-shopping"></i>Cart ({{cartCount}})
                 </button>
             </div>
-            <!--show shopping cart page-->
-            <div v-else>
-                <h1>Your purchase</h1>
-                <div v-if="cart.length > 0">
-                    <div v-for="(item, index) in cart" :key="index" class="cart-item"> 
-                        <h4>Subject: {{ item.subject }}</h4>
-                        <p>Location: {{ item.location }}</p>
-                        <p>Price: {{ item.price }}</p>
-                        <p>Spaces: {{ item.spaces }}</p>
-                    </div>
-                </div>
-                <button>Checkout</button>
-                <div v-else>
-                    <p>Your cart is empty</p>
-                </div>
-            </div>
+
         </main>
 
 
@@ -146,6 +159,11 @@
                 // toggle visibility of cart and lessons view
                 showCart() {  
                     this.showLesson = !this.showLesson;
+                    this.showCheckout = false; 
+                },
+                showCheckoutPage (){
+                    this.showLesson = false;
+                    this.showCheckout = true;
                 },
                 addToCart(lesson){
                     if (lesson.spaces> 0){
@@ -155,7 +173,11 @@
                     } else{
                         alert("no more spaces left for this lesson!");
                     }
-                    
+                },
+                removeFromCart(item, index) {
+                    this.cart.splice(index, 1);  //remove from cart
+                    item.spaces += 1; //increase spaces for specific lesson
+                    this.cartCount -= 1; // decrease count for number of items in cart
                 }
             },
 computed: {

@@ -70,7 +70,7 @@
             </div>
             
             <!--show shopping cart page-->
-            <div v-else-if="!showLesson && !showCheckout">
+            <div v-else>
                 <h1>Your purchase</h1>
                 <div v-if="cart.length > 0">
                     <div class="lesson-box" v-for="(item, index) in cart" :key="index"> 
@@ -86,14 +86,18 @@
                         </div>
                     </div>
                 </div>
-                <button @click="showCheckoutPage">Checkout</button>
+                <div class="Checkout">
+                    <form>
+                        <h3>Checkout</h3>
+                        <p>Name: <input type="text" required v-model="name" placeholder="name"></p>
+                        <p>Phone: <input type="number" required v-model="phone" placeholder="phone"></p>  
+                    </form>
+                </div>
+                <!-- only enable button if name and phone correctly entered -->
+                <button :disabled="!isFormValid" @click="checkout">Checkout</button> 
                 <div v-else>
                     <p>Your cart is empty</p>
                 </div>
-            </div>
-
-            <div v-else>
-                <h1>Checkout</h1>
             </div>
 
             <!-- shopping cart page -->
@@ -120,6 +124,8 @@
                 showLesson: true,
                 showCheckout: false,
                 searchTerm:"",
+                name: '',
+                phone:'',
                 cart:[],
                 cartCount: 0,
                 lessons: [
@@ -178,6 +184,9 @@
                     this.cart.splice(index, 1);  //remove from cart
                     item.spaces += 1; //increase spaces for specific lesson
                     this.cartCount -= 1; // decrease count for number of items in cart
+                },
+                checkout(){
+                    alert("Your order has been submitted!");
                 }
             },
 computed: {
@@ -202,7 +211,6 @@ computed: {
                     return this.sortOrder === 'ascending' ? result : -result;
                 }
             }
-
             // If all criteria are equal, return 0
             return 0;
         });
@@ -211,6 +219,11 @@ computed: {
         return this.sortedLessons.filter((item)=>
             item.subject.toLowerCase().includes(this.searchTerm.toLowerCase())
         );
+    },
+    isFormValid(){
+        const nameValid = /^[a-zA-Z\s]+$/.test(this.name);  // only text
+        const phoneValid = /^\d+$/.test(this.phone);   //only numbers
+        return nameValid && phoneValid; // both should be valid to continue 
     }
 }
 

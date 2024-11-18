@@ -71,7 +71,7 @@
             
             <!--show shopping cart page-->
             <div v-else>
-                <h1>Your purchase</h1>
+                <h1>Shopping Cart</h1>
                 <div v-if="cart.length > 0">
                     <div class="lesson-box" v-for="(item, index) in cart" :key="index"> 
                         <div class="lesson-info">
@@ -86,11 +86,13 @@
                         </div>
                     </div>
                 </div>
+                <h4>Total price: ${{ totalPrice }}</h4>
                 <div class="Checkout">
                     <form>
                         <h3>Checkout</h3>
                         <p>Name: <input type="text" required v-model="name" placeholder="name"></p>
                         <p>Phone: <input type="number" required v-model="phone" placeholder="phone"></p>  
+                        <p>Email: <input type="email" required v-model="email" placeholder="email"></p>  
                     </form>
                 </div>
                 <!-- only enable button if name and phone correctly entered -->
@@ -117,7 +119,7 @@
         let webstore = new Vue({
             el: "#webstore",
             data: {
-                message: 'After School Classes',
+                message: 'LEARN BEYOND',
                 sortKeys : [],
                 sortOrder: 'ascending',
                 sortBy: 'subject',
@@ -145,16 +147,16 @@
                         subject: 'Music', location: 'Bristol', price: '90', spaces: '5', image: 'images/music.jpg'
                     },
                     {
-                        subject: 'Art', location: 'Middlesex', price: '150', spaces: '5', image: ''
+                        subject: 'Art', location: 'Middlesex', price: '150', spaces: '5', image: 'images/art.jpg'
                     },
                     {
-                        subject: 'French', location: 'Oxford', price: '200', spaces: '5', image: ''
+                        subject: 'French', location: 'Oxford', price: '200', spaces: '5', image: 'images/french.jpg'
                     },
                     {
-                        subject: 'Art', location: 'York', price: '120', spaces: '5', image: ''
+                        subject: 'Art', location: 'York', price: '120', spaces: '5', image: 'images/art.jpg'
                     },
                     {
-                        subject: 'Social Studies', location: 'London', price: '250', spaces: '5', image: ''
+                        subject: 'Social Studies', location: 'London', price: '250', spaces: '5', image: 'images/social_studies.jpg'
                     }
                 ],
                 //sortedLessons: []
@@ -223,8 +225,12 @@ computed: {
     isFormValid(){
         const nameValid = /^[a-zA-Z\s]+$/.test(this.name);  // only text
         const phoneValid = /^\d+$/.test(this.phone);   //only numbers
-        return nameValid && phoneValid; // both should be valid to continue 
-    }
+        const emailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.email);
+        return nameValid && phoneValid && emailValid;  // valid only if all fields valid 
+    },
+    totalPrice() {
+        return this.cart.reduce((sum, item) => sum + Number(item.price), 0);
+    },
 }
 
         })

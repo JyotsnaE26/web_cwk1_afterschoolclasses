@@ -131,51 +131,51 @@
                 phone:'',
                 cart:[],
                 cartCount: 0,
-                //lessons: []
-                lessons: [
-                 {
-                        subject: 'Math', location: 'London', price: '100', spaces: '5', image: 'images/math.jpg'
-                    },
-                    {
-                        subject: 'Math', location: 'Oxford', price: '100', spaces: '5', image: 'images/math.jpg'
-                    },
-                    {
-                        subject: 'English', location: 'London', price: '100', spaces: '5', image: 'images/english.jpg'
-                    },
-                    {
-                        subject: 'English', location: 'York', price: '80', spaces: '5', image: 'images/english.jpg'
-                    },
-                    {
-                        subject: 'Music', location: 'Bristol', price: '90', spaces: '5', image: 'images/music.jpg'
-                    },
-                    {
-                        subject: 'Art', location: 'Middlesex', price: '150', spaces: '5', image: 'images/art.jpg'
-                    },
-                    {
-                        subject: 'French', location: 'Oxford', price: '200', spaces: '5', image: 'images/french.jpg'
-                    },
-                    {
-                        subject: 'Art', location: 'York', price: '120', spaces: '5', image: 'images/art.jpg'
-                    },
-                    {
-                        subject: 'Social Studies', location: 'London', price: '250', spaces: '5', image: 'images/social_studies.jpg'
-                    },
-                    {
-                        subject: 'Dance', location: 'Chelsea', price: '160', spaces: '5', image: 'images/dance.jpg'
-                    },
-                    {
-                        subject: 'Chinese', location: 'Berkley', price: '200', spaces: '5', image: 'images/Chinese.jpg'
-                    },
-                    {
-                        subject: 'Science', location: 'London', price: '250', spaces: '5', image: 'images/science.jpg'
-                    },
-                    {
-                        subject: 'Science', location: 'Middlesex', price: '230', spaces: '5', image: 'images/science.jpg'
-                    },
-                    {
-                        subject: 'Chinese', location: 'Oxford', price: '220', spaces: '5', image: 'images/Chinese.jpg'
-                    },
-                ],
+                lessons: []
+                // lessons: [
+                //  {
+                //         subject: 'Math', location: 'London', price: '100', spaces: '5', image: 'images/math.jpg'
+                //     },
+                //     {
+                //         subject: 'Math', location: 'Oxford', price: '100', spaces: '5', image: 'images/math.jpg'
+                //     },
+                //     {
+                //         subject: 'English', location: 'London', price: '100', spaces: '5', image: 'images/english.jpg'
+                //     },
+                //     {
+                //         subject: 'English', location: 'York', price: '80', spaces: '5', image: 'images/english.jpg'
+                //     },
+                //     {
+                //         subject: 'Music', location: 'Bristol', price: '90', spaces: '5', image: 'images/music.jpg'
+                //     },
+                //     {
+                //         subject: 'Art', location: 'Middlesex', price: '150', spaces: '5', image: 'images/art.jpg'
+                //     },
+                //     {
+                //         subject: 'French', location: 'Oxford', price: '200', spaces: '5', image: 'images/french.jpg'
+                //     },
+                //     {
+                //         subject: 'Art', location: 'York', price: '120', spaces: '5', image: 'images/art.jpg'
+                //     },
+                //     {
+                //         subject: 'Social Studies', location: 'London', price: '250', spaces: '5', image: 'images/social_studies.jpg'
+                //     },
+                //     {
+                //         subject: 'Dance', location: 'Chelsea', price: '160', spaces: '5', image: 'images/dance.jpg'
+                //     },
+                //     {
+                //         subject: 'Chinese', location: 'Berkley', price: '200', spaces: '5', image: 'images/Chinese.jpg'
+                //     },
+                //     {
+                //         subject: 'Science', location: 'London', price: '250', spaces: '5', image: 'images/science.jpg'
+                //     },
+                //     {
+                //         subject: 'Science', location: 'Middlesex', price: '230', spaces: '5', image: 'images/science.jpg'
+                //     },
+                //     {
+                //         subject: 'Chinese', location: 'Oxford', price: '220', spaces: '5', image: 'images/Chinese.jpg'
+                //     },
+                // ],
                 //sortedLessons: []
 
             },
@@ -186,15 +186,20 @@
 
             methods: {
                 fetchLessons() {
-                    // Fetch lessons from the backend
-                    // fetch('http://localhost:5000/lesson_info')
-                    //     .then(response => response.json())
-                    //     .then(data => {
-                    //         this.lessons = data; // Set lessons data to the fetched lessons
-                    //     })
-                    //     .catch(error => {
-                    //         console.error('Error fetching lessons:', error);
-                    //     });
+                    //Fetch lessons from the backend
+                    fetch('https://after-school-classes-backend.onrender.com/api/lessons') //  Render URL
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error('Network response was not ok');
+                            }
+                            return response.json();  // Parse the response body as JSON
+                        })
+                        .then(data => {
+                            this.lessons = data;  // Set lessons data to the fetched lessons
+                        })
+                        .catch(error => {
+                            console.error('Error fetching lessons:', error); // Log errors to the console
+                        });
                 },
                 // toggle visibility of cart and lessons view
                 showCart() {  

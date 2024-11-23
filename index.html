@@ -16,7 +16,7 @@
             <h2>{{ message }}</h2>
             <!--search bar-->
             <div class="search-container">
-                <input v-model="searchTerm" type="text" class="search-bar" placeholder="Search...">
+                <input v-model="searchTerm" type="text" class="search-bar" @input="searchLessons" placeholder="Search...">
                 <button class="search-button"><i class="fa-solid fa-magnifying-glass"></i>Search</button>
             </div>
         </header>
@@ -126,12 +126,14 @@
                 showLesson: true,
                 showCheckout: false,
                 searchTerm:"",
+                searchResults: [],
                 name: '',
                 phone:'',
                 cart:[],
                 cartCount: 0,
+                //lessons: []
                 lessons: [
-                    {
+                 {
                         subject: 'Math', location: 'London', price: '100', spaces: '5', image: 'images/math.jpg'
                     },
                     {
@@ -157,13 +159,43 @@
                     },
                     {
                         subject: 'Social Studies', location: 'London', price: '250', spaces: '5', image: 'images/social_studies.jpg'
-                    }
+                    },
+                    {
+                        subject: 'Dance', location: 'Chelsea', price: '160', spaces: '5', image: 'images/dance.jpg'
+                    },
+                    {
+                        subject: 'Chinese', location: 'Berkley', price: '200', spaces: '5', image: 'images/Chinese.jpg'
+                    },
+                    {
+                        subject: 'Science', location: 'London', price: '250', spaces: '5', image: 'images/science.jpg'
+                    },
+                    {
+                        subject: 'Science', location: 'Middlesex', price: '230', spaces: '5', image: 'images/science.jpg'
+                    },
+                    {
+                        subject: 'Chinese', location: 'Oxford', price: '220', spaces: '5', image: 'images/Chinese.jpg'
+                    },
                 ],
                 //sortedLessons: []
 
             },
-            
+            created() {
+                // Fetch lessons from the backend when the component is created
+                this.fetchLessons();
+            },
+
             methods: {
+                fetchLessons() {
+                    // Fetch lessons from the backend
+                    // fetch('http://localhost:5000/lesson_info')
+                    //     .then(response => response.json())
+                    //     .then(data => {
+                    //         this.lessons = data; // Set lessons data to the fetched lessons
+                    //     })
+                    //     .catch(error => {
+                    //         console.error('Error fetching lessons:', error);
+                    //     });
+                },
                 // toggle visibility of cart and lessons view
                 showCart() {  
                     this.showLesson = !this.showLesson;
@@ -189,49 +221,102 @@
                 },
                 checkout(){
                     alert("Your order has been submitted!");
-                }
-            },
-computed: {
-    sortedLessons() {
-        // if no sort keys are selected, return lessons without sorting
-        if (this.sortKeys.length === 0) return this.lessons;
-        // Copy the array to avoid modifying the original lessons array
-        return this.lessons.slice().sort((a, b) => {
-            // Define sort functions for each criterion
-            const sortFunctions = {
-                subject: (a, b) => a.subject.localeCompare(b.subject),
-                location: (a, b) => a.location.localeCompare(b.location),
-                price: (a, b) => a.price - b.price,
-                spaces: (a, b) => a.spaces - b.spaces,
-            };
 
-            // Apply each selected criterion in sequence
-            for (const key of this.sortKeys) {
-                const result = sortFunctions[key](a, b);
-                if (result !== 0) {
-                    // Adjust the result based on sortOrder
-                    return this.sortOrder === 'ascending' ? result : -result;
-                }
+                //     const orderData = {
+                //         name: this.name, // Input field for customer's name
+                //         phoneNumber: this.phone, // Input field for customer's phone
+                //         lessonId: this.cart.map(item => item.lessonId), // List of lesson IDs in the cart
+                //         spaces: this.cart.map(item => item.spaces) // Number of spaces purchased per lesson
+                //     };
+
+                //     fetch('http://localhost:5000/orders', {
+                //         method: 'POST',
+                //         headers: {
+                //             'Content-Type': 'application/json'
+                //         },
+                //         body: JSON.stringify(orderData)
+                //     })
+                //         .then(response => {
+                //             if (!response.ok) {
+                //                 throw new Error('Failed to submit order');
+                //             }
+                //             return response.json();
+                //         })
+                //         .then(data => {
+                //             alert('Your order has been submitted successfully!');
+                //             console.log('Order ID:', data.orderId);
+
+                //             // Clear the cart (optional)
+                //             this.cart = [];
+                //         })
+                //         .catch(error => {
+                //             console.error('Error submitting order:', error);
+                //             alert('An error occurred while submitting your order. Please try again.');
+                //         });
+                 },
+                 async searchLessons() {
+                    // if (!this.searchTerm.trim()) {
+                    //     this.searchResults = [];  // Clear results if search term is empty
+                    //     return;
+                    // }
+
+                    // try {
+                    //     const response = await fetch(`http://localhost:5000/api/search?query=${encodeURIComponent(this.searchTerm)}`);
+                    //     if (!response.ok) {
+                    //         const errorData = await response.json();
+                    //         this.searchResults = [];  // Clear or show error handling
+                    //         alert(errorData.error || 'Search failed');
+                    //         return;
+                    //     }
+
+                    //     const data = await response.json();
+                    //     this.searchResults = data;  // Store fetched results in a new data property
+                    // } catch (error) {
+                    //     console.error('Error fetching search results:', error);
+                    //     alert('Error fetching search results');
+                    // }
+                },
+            },
+
+            computed: {
+                sortedLessons() {
+                    // if no sort keys are selected, return lessons without sorting
+                    if (this.sortKeys.length === 0) return this.lessons;
+                    // Copy the array to avoid modifying the original lessons array
+                    return this.lessons.slice().sort((a, b) => {
+                        // Define sort functions for each criterion
+                        const sortFunctions = {
+                            subject: (a, b) => a.subject.localeCompare(b.subject),
+                            location: (a, b) => a.location.localeCompare(b.location),
+                            price: (a, b) => a.price - b.price,
+                            spaces: (a, b) => a.spaces - b.spaces,
+                        };
+
+                        // Apply each selected criterion in sequence
+                        for (const key of this.sortKeys) {
+                            const result = sortFunctions[key](a, b);
+                            if (result !== 0) {
+                                // Adjust the result based on sortOrder
+                                return this.sortOrder === 'ascending' ? result : -result;
+                            }
+                        }
+                        // If all criteria are equal, return 0
+                        return 0;
+                    });
+                },
+                filteredData() {
+                    return this.searchTerm ? this.searchResults : this.sortedLessons;  //return either the search results or the lessons from sorted lessons array
+                },
+                isFormValid() {
+                    const nameValid = /^[a-zA-Z\s]+$/.test(this.name);  // only text
+                    const phoneValid = /^\d+$/.test(this.phone);   //only numbers
+                    const emailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.email);
+                    return nameValid && phoneValid ;  // valid only if required fields valid 
+                },
+                totalPrice() {
+                    return this.cart.reduce((sum, item) => sum + Number(item.price), 0);
+                },
             }
-            // If all criteria are equal, return 0
-            return 0;
-        });
-    },
-    filteredData(){
-        return this.sortedLessons.filter((item)=>
-            item.subject.toLowerCase().includes(this.searchTerm.toLowerCase())
-        );
-    },
-    isFormValid(){
-        const nameValid = /^[a-zA-Z\s]+$/.test(this.name);  // only text
-        const phoneValid = /^\d+$/.test(this.phone);   //only numbers
-        const emailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.email);
-        return nameValid && phoneValid && emailValid;  // valid only if all fields valid 
-    },
-    totalPrice() {
-        return this.cart.reduce((sum, item) => sum + Number(item.price), 0);
-    },
-}
 
         })
     </script>

@@ -225,42 +225,42 @@
                     this.cartCount -= 1; // decrease count for number of items in cart
                 },
                 checkout(){
-                    alert("Your order has been submitted!");
-                    const orderData = {
-                        name: this.name, // Customer's name from the input field
-                        phoneNumber: this.phone, // Customer's phone number from the input field
-                        lessonIds: this.cart.map(item => item.lessonId), // List of lesson IDs in the cart
-                        spaces: this.cart.map(item => item.spaces) // Number of spaces purchased per lesson
-                    };
+                    // alert("Your order has been submitted!");
+                    // const orderData = {
+                    //     name: this.name, // Customer's name from the input field
+                    //     phoneNumber: this.phone, // Customer's phone number from the input field
+                    //     lessonIds: this.cart.map(item => item.lessonId), // List of lesson IDs in the cart
+                    //     spaces: this.cart.map(item => item.spaces) // Number of spaces purchased per lesson
+                    // };
 
-                    // Send a POST request to your backend to submit the order
-                    fetch('https://after-school-classes-backend.onrender.com/api/orders', {
-                        method: 'POST', // We are sending data, so use POST method
-                        headers: {
-                            'Content-Type': 'application/json' // Inform the backend that we're sending JSON
-                        },
-                        body: JSON.stringify(orderData) // Send the order data as JSON in the body
-                    })
-                        .then(response => {
-                            if (!response.ok) {
-                                // If the response is not okay, throw an error
-                                throw new Error('Failed to submit order');
-                            }
-                            return response.json(); // Parse the response data if successful
-                        })
-                        .then(data => {
-                            // Success: order has been successfully submitted
-                            alert('Your order has been submitted successfully!'); // Show success message
-                            console.log('Order ID:', data.orderId); // Log the order ID if you want to use it
+                    // // Send a POST request to your backend to submit the order
+                    // fetch('https://after-school-classes-backend.onrender.com/api/orders', {
+                    //     method: 'POST', // We are sending data, so use POST method
+                    //     headers: {
+                    //         'Content-Type': 'application/json' // Inform the backend that we're sending JSON
+                    //     },
+                    //     body: JSON.stringify(orderData) // Send the order data as JSON in the body
+                    // })
+                    //     .then(response => {
+                    //         if (!response.ok) {
+                    //             // If the response is not okay, throw an error
+                    //             throw new Error('Failed to submit order');
+                    //         }
+                    //         return response.json(); // Parse the response data if successful
+                    //     })
+                    //     .then(data => {
+                    //         // Success: order has been successfully submitted
+                    //         alert('Your order has been submitted successfully!'); // Show success message
+                    //         console.log('Order ID:', data.orderId); // Log the order ID if you want to use it
 
-                            // Optionally, clear the cart after submission
-                            this.cart = [];
-                        })
-                        .catch(error => {
-                            // Handle errors that occur during the fetch
-                            console.error('Error submitting order:', error);
-                            alert('An error occurred while submitting your order. Please try again.'); // Show error message
-                        });
+                    //         // Optionally, clear the cart after submission
+                    //         this.cart = [];
+                    //     })
+                    //     .catch(error => {
+                    //         // Handle errors that occur during the fetch
+                    //         console.error('Error submitting order:', error);
+                    //         alert('An error occurred while submitting your order. Please try again.'); // Show error message
+                    //     });
                  },
                  async searchLessons() {
                     // if (!this.searchTerm.trim()) {

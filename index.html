@@ -16,9 +16,15 @@
             <h2>{{ message }}</h2>
             <!--search bar-->
             <div class="search-container">
-                <input v-model="searchTerm" type="text" class="search-bar" @input="searchLessons" placeholder="Search...">
-                <button class="search-button"><i class="fa-solid fa-magnifying-glass"></i>Search</button>
+                <input v-model="searchTerm" type="text" class="search-bar" @input="searchLessons" placeholder="Search by Subject or Location">
+                <button class="search-button"><i class="fa-solid fa-magnifying-glass"></i></button>
             </div>
+
+            <ul v-if="searchResults.length > 0">
+                <li v-for="lesson in searchResults" :key="lesson._id">
+                    {{ lesson.subject }} - {{ lesson.location }}
+                </li>
+            </ul>
         </header>
 
         <main>
@@ -127,58 +133,14 @@
                 showCheckout: false,
                 searchTerm:"",
                 searchResults: [],
+                debounceTimeout: null,
                 name: '',
                 phone:'',
                 cart:[],
                 cartCount: 0,
                 lessons: []
-                // lessons: [
-                //  {
-                //         subject: 'Math', location: 'London', price: '100', spaces: '5', image: 'images/math.jpg'
-                //     },
-                //     {
-                //         subject: 'Math', location: 'Oxford', price: '100', spaces: '5', image: 'images/math.jpg'
-                //     },
-                //     {
-                //         subject: 'English', location: 'London', price: '100', spaces: '5', image: 'images/english.jpg'
-                //     },
-                //     {
-                //         subject: 'English', location: 'York', price: '80', spaces: '5', image: 'images/english.jpg'
-                //     },
-                //     {
-                //         subject: 'Music', location: 'Bristol', price: '90', spaces: '5', image: 'images/music.jpg'
-                //     },
-                //     {
-                //         subject: 'Art', location: 'Middlesex', price: '150', spaces: '5', image: 'images/art.jpg'
-                //     },
-                //     {
-                //         subject: 'French', location: 'Oxford', price: '200', spaces: '5', image: 'images/french.jpg'
-                //     },
-                //     {
-                //         subject: 'Art', location: 'York', price: '120', spaces: '5', image: 'images/art.jpg'
-                //     },
-                //     {
-                //         subject: 'Social Studies', location: 'London', price: '250', spaces: '5', image: 'images/social_studies.jpg'
-                //     },
-                //     {
-                //         subject: 'Dance', location: 'Chelsea', price: '160', spaces: '5', image: 'images/dance.jpg'
-                //     },
-                //     {
-                //         subject: 'Chinese', location: 'Berkley', price: '200', spaces: '5', image: 'images/Chinese.jpg'
-                //     },
-                //     {
-                //         subject: 'Science', location: 'London', price: '250', spaces: '5', image: 'images/science.jpg'
-                //     },
-                //     {
-                //         subject: 'Science', location: 'Middlesex', price: '230', spaces: '5', image: 'images/science.jpg'
-                //     },
-                //     {
-                //         subject: 'Chinese', location: 'Oxford', price: '220', spaces: '5', image: 'images/Chinese.jpg'
-                //     },
-                // ],
-                //sortedLessons: []
-
             },
+            
             created() {
                 // Fetch lessons from the backend when the component is created
                 this.fetchLessons();
@@ -251,9 +213,6 @@
                             // Success: order has been successfully submitted
                             alert('Your order has been submitted successfully!'); // Show success message
                             console.log('Order ID:', data.orderId); // Log the order ID if you want to use it
-
-                            // Optionally, clear the cart after submission
-                            this.cart = [];
                         })
                         .catch(error => {
                             // Handle errors that occur during the fetch
@@ -262,26 +221,30 @@
                         });
                  },
                  async searchLessons() {
-                    // if (!this.searchTerm.trim()) {
-                    //     this.searchResults = [];  // Clear results if search term is empty
-                    //     return;
-                    // }
+                    if (!this.searchTerm.trim()) {
+                         this.searchResults = [];  // Clear results if search term is empty
+                         return;
+                     }
 
-                    // try {
-                    //     const response = await fetch(`http://localhost:5000/api/search?query=${encodeURIComponent(this.searchTerm)}`);
-                    //     if (!response.ok) {
-                    //         const errorData = await response.json();
-                    //         this.searchResults = [];  // Clear or show error handling
-                    //         alert(errorData.error || 'Search failed');
-                    //         return;
-                    //     }
+                     clearTimeout(this.debounceTimeout);
 
-                    //     const data = await response.json();
-                    //     this.searchResults = data;  // Store fetched results in a new data property
-                    // } catch (error) {
-                    //     console.error('Error fetching search results:', error);
-                    //     alert('Error fetching search results');
-                    // }
+                     this.debounceTimeout = setTimeout(async () => {
+                         try {
+                             const response = await fetch(`https://after-school-classes-backend.onrender.com/api/search?query=${encodeURIComponent(this.searchTerm)}`);
+                             if (!response.ok) {
+                                 const errorData = await response.json();
+                                 this.searchResults = [];
+                                 alert(errorData.error || 'Search failed');
+                                 return;
+                             }
+
+                             const data = await response.json();
+                             this.searchResults = data;
+                         } catch (error) {
+                             console.error('Error fetching search results:', error);
+                             alert('Error fetching search results');
+                         }
+                     }, 300); 
                 },
             },
 

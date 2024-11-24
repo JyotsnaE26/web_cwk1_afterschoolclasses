@@ -68,8 +68,8 @@
                         <button :disabled="lesson.spaces === 0" @click="addToCart(lesson)" ><span>Add to cart</span> </button>
                     </div>
                     <div class="lesson-image">
-                        <img :src="`https://after-school-classes-backend.onrender.com/images/${lesson.image}`" alt="lesson image" />
-                        @error="handleImageError('lesson', lesson.subject)" />
+                        <img :src="`https://after-school-classes-backend.onrender.com/images/${lesson.image}`" alt="lesson image" 
+                         @error="handleImageError('lesson', lesson.subject)" />
                             <!-- Error message for missing image -->
                             <p v-if="lesson.imageError" class="error-message">Image not available for {{ lesson.subject }}.</p>
                     </div>
@@ -91,8 +91,8 @@
                             <button @click="removeFromCart(item, index) ">Remove</button>
                         </div> 
                         <div class="lesson-image">
-                            <img :src="`https://after-school-classes-backend.onrender.com/images/${item.image}`" alt="lesson image" />
-                            @error="handleImageError('cart', item.subject)" />
+                            <img :src="`https://after-school-classes-backend.onrender.com/images/${item.image}`" alt="lesson image"
+                             @error="handleImageError('cart', item.subject)" /> 
                             <!-- Error message for missing image -->
                             <p v-if="item.imageError" class="error-message">Image not available for {{ item.subject }}.</p>
                         </div>

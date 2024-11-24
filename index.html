@@ -20,11 +20,17 @@
                 <button class="search-button"><i class="fa-solid fa-magnifying-glass"></i></button>
             </div>
 
-            <ul v-if="searchResults.length > 0">
-                <li v-for="lesson in searchResults" :key="lesson._id">
-                    {{ lesson.subject }} - {{ lesson.location }}
-                </li>
-            </ul>
+            <div v-if="searchResults.length > 0" class="results-container">
+                <div v-for="lesson in searchResults" :key="lesson._id" class="result-card">
+                    <h3 class="lesson-title">{{ lesson.subject }}</h3>
+                    <p class="lesson-location">Location: {{ lesson.location }}</p>
+                </div>
+            </div>
+            
+            <!-- Message when no results are found -->
+            <div v-else-if="searchResults.length === 0 && searchTerm.trim() !== ''" class="no-results">
+                No matching lessons found.
+            </div>
         </header>
 
         <main>

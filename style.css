@@ -149,4 +149,8 @@ button{
     font-size: 18px;
     color: #777;
   }
-  
+  .error-message {
+    color: rgb(240, 12, 12);
+    font-size: 14px;
+    margin-top: 10px;
+}

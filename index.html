@@ -16,21 +16,15 @@
             <h2>{{ message }}</h2>
             <!--search bar-->
             <div class="search-container">
-                <input v-model="searchTerm" type="text" class="search-bar" @input="searchLessons" placeholder="Search by Subject or Location">
+                <input v-model="searchTerm" type="text" class="search-bar" @input="searchLessons" placeholder="Search...">
                 <button class="search-button"><i class="fa-solid fa-magnifying-glass"></i></button>
             </div>
 
-            <div v-if="searchResults.length > 0" class="results-container">
-                <div v-for="lesson in searchResults" :key="lesson._id" class="result-card">
-                    <h3 class="lesson-title">{{ lesson.subject }}</h3>
-                    <p class="lesson-location">Location: {{ lesson.location }}</p>
-                </div>
-            </div>
-            
-            <!-- Message when no results are found -->
-            <div v-else-if="searchResults.length === 0 && searchTerm.trim() !== ''" class="no-results">
-                No matching lessons found.
-            </div>
+            <ul v-if="searchResults.length > 0">
+                <li v-for="lesson in searchResults" :key="lesson._id">
+                    {{ lesson.subject }} - {{ lesson.location }}
+                </li>
+            </ul>
         </header>
 
         <main>
@@ -74,7 +68,10 @@
                         <button :disabled="lesson.spaces === 0" @click="addToCart(lesson)" ><span>Add to cart</span> </button>
                     </div>
                     <div class="lesson-image">
-                        <img :src="lesson.image" alt="lesson image">
+                        <img :src="`https://after-school-classes-backend.onrender.com/images/${lesson.image}`" alt="lesson image" />
+                        @error="handleImageError('lesson', lesson.subject)" />
+                            <!-- Error message for missing image -->
+                            <p v-if="lesson.imageError" class="error-message">Image not available for {{ lesson.subject }}.</p>
                     </div>
                 </div>
 
@@ -94,7 +91,10 @@
                             <button @click="removeFromCart(item, index) ">Remove</button>
                         </div> 
                         <div class="lesson-image">
-                            <img :src="item.image" alt="lesson image">
+                            <img :src="`https://after-school-classes-backend.onrender.com/images/${item.image}`" alt="lesson image" />
+                            @error="handleImageError('cart', item.subject)" />
+                            <!-- Error message for missing image -->
+                            <p v-if="item.imageError" class="error-message">Image not available for {{ item.subject }}.</p>
                         </div>
                     </div>
                 </div>
@@ -169,6 +169,20 @@
                             console.error('Error fetching lessons:', error); // Log errors to the console
                         });
                 },
+                // Handle image load error and set error flag
+                handleImageError(type, subject) {
+                    if (type === 'lesson') {
+                        const lesson = this.filteredData.find(lesson => lesson.subject === subject);
+                        if (lesson) {
+                            lesson.imageError = true;  // Set error flag for missing image in lessons
+                        }
+                    } else if (type === 'cart') {
+                        const cartItem = this.cart.find(item => item.subject === subject);
+                        if (cartItem) {
+                            cartItem.imageError = true;  // Set error flag for missing image in cart
+                        }
+                    }
+                },
                 // toggle visibility of cart and lessons view
                 showCart() {  
                     this.showLesson = !this.showLesson;
@@ -202,11 +216,11 @@
 
                     // Send a POST request to your backend to submit the order
                     fetch('https://after-school-classes-backend.onrender.com/api/orders', {
-                        method: 'POST', // We are sending data, so use POST method
+                        method: 'POST', 
                         headers: {
-                            'Content-Type': 'application/json' // Inform the backend that we're sending JSON
+                            'Content-Type': 'application/json' // sending json to backend
                         },
-                        body: JSON.stringify(orderData) // Send the order data as JSON in the body
+                        body: JSON.stringify(orderData) // Send the order data as json 
                     })
                         .then(response => {
                             if (!response.ok) {
@@ -216,14 +230,13 @@
                             return response.json(); // Parse the response data if successful
                         })
                         .then(data => {
-                            // Success: order has been successfully submitted
                             alert('Your order has been submitted successfully!'); // Show success message
-                            console.log('Order ID:', data.orderId); // Log the order ID if you want to use it
+                            console.log('Order ID:', data.orderId); 
                         })
                         .catch(error => {
                             // Handle errors that occur during the fetch
                             console.error('Error submitting order:', error);
-                            alert('An error occurred while submitting your order. Please try again.'); // Show error message
+                            alert('An error occurred while submitting your order. Please try again.'); 
                         });
                  },
                  async searchLessons() {
@@ -250,7 +263,7 @@
                              console.error('Error fetching search results:', error);
                              alert('Error fetching search results');
                          }
-                     }, 300); 
+                     }, 300);
                 },
             },
 

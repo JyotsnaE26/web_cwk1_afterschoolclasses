@@ -68,10 +68,10 @@
                         <button :disabled="lesson.spaces === 0" @click="addToCart(lesson)" ><span>Add to cart</span> </button>
                     </div>
                     <div class="lesson-image">
-                        <img :src="`https://after-school-classes-backend.onrender.com/images/${lesson.image}`" alt="lesson image" 
-                         @error="handleImageError('lesson', lesson.subject)" />
+                        <img :src="`https://after-school-classes-backend.onrender.com/images/${lesson.image}`" alt="lesson image" />
+                         <!-- @error="handleImageError('lesson', lesson.subject)" -->
                             <!-- Error message for missing image -->
-                            <p v-if="lesson.imageError" class="error-message">Image not available for {{ lesson.subject }}.</p>
+                            <!-- <p v-if="lesson.imageError" class="error-message">Image not available for {{ lesson.subject }}.</p> -->
                     </div>
                 </div>
 
@@ -91,10 +91,10 @@
                             <button @click="removeFromCart(item, index) ">Remove</button>
                         </div> 
                         <div class="lesson-image">
-                            <img :src="`https://after-school-classes-backend.onrender.com/images/${item.image}`" alt="lesson image"
-                             @error="handleImageError('cart', item.subject)" /> 
+                            <img :src="`https://after-school-classes-backend.onrender.com/images/${item.image}`" alt="lesson image" />
+                             <!-- @error="handleImageError('cart', item.subject)"  -->
                             <!-- Error message for missing image -->
-                            <p v-if="item.imageError" class="error-message">Image not available for {{ item.subject }}.</p>
+                            <!-- <p v-if="item.imageError" class="error-message">Image not available for {{ item.subject }}.</p> -->
                         </div>
                     </div>
                 </div>
@@ -169,20 +169,20 @@
                             console.error('Error fetching lessons:', error); // Log errors to the console
                         });
                 },
-                // Handle image load error and set error flag
-                handleImageError(type, subject) {
-                    if (type === 'lesson') {
-                        const lesson = this.filteredData.find(lesson => lesson.subject === subject);
-                        if (lesson) {
-                            lesson.imageError = true;  // Set error flag for missing image in lessons
-                        }
-                    } else if (type === 'cart') {
-                        const cartItem = this.cart.find(item => item.subject === subject);
-                        if (cartItem) {
-                            cartItem.imageError = true;  // Set error flag for missing image in cart
-                        }
-                    }
-                },
+                // // Handle image load error and set error flag
+                // handleImageError(type, subject) {
+                //     if (type === 'lesson') {
+                //         const lesson = this.filteredData.find(lesson => lesson.subject === subject);
+                //         if (lesson) {
+                //             lesson.imageError = true;  // Set error flag for missing image in lessons
+                //         }
+                //     } else if (type === 'cart') {
+                //         const cartItem = this.cart.find(item => item.subject === subject);
+                //         if (cartItem) {
+                //             cartItem.imageError = true;  // Set error flag for missing image in cart
+                //         }
+                //     }
+                // },
                 // toggle visibility of cart and lessons view
                 showCart() {  
                     this.showLesson = !this.showLesson;

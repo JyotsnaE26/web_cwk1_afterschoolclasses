@@ -80,47 +80,47 @@ button{
     opacity: 1;
 }
 /* Style for the search container */
-.search-container {
+/* .search-container {
     width: 80%;
     margin: 0 auto;
     text-align: center;
     margin-top: 20px;
-  }
+  } */
   
   /* Input field style for search box */
-  .search-bar {
+  /* .search-bar {
     width: 60%;
     padding: 10px;
     font-size: 16px;
     border-radius: 8px;
     border: 1px solid #ccc;
-    margin-bottom: 20px; /* Space between input and results */
-  }
+    margin-bottom: 20px; 
+  } */
   
   /* Button style for search button */
-  .search-button {
+  /* .search-button {
     background-color: #007BFF;
     color: white;
     border: none;
     padding: 10px;
     border-radius: 8px;
     cursor: pointer;
-  }
+  } */
   
-  .search-button:hover {
+  /* .search-button:hover {
     background-color: #0056b3;
   }
-  
+   */
   /* Style for the results container */
-  .results-container {
+  /* .results-container {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     gap: 20px;
-    margin-top: 20px; /* Space between search box and results */
+    margin-top: 20px; 
   }
-  
+   */
   /* Style for each individual result card */
-  .result-card {
+  /* .result-card {
     background-color: #f9f9f9;
     border: 1px solid #ddd;
     border-radius: 8px;
@@ -148,9 +148,9 @@ button{
     margin-top: 20px;
     font-size: 18px;
     color: #777;
-  }
-  .error-message {
+  } */
+  /* .error-message {
     color: rgb(240, 12, 12);
     font-size: 14px;
     margin-top: 10px;
-}
+} */

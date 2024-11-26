@@ -56,7 +56,7 @@
             </div>
                 <div class="lessons-grid"> 
                     <!--lessons details inside the boxes-->
-                    <div class="lesson-box" v-for="lesson in filteredData" :key="lesson.subject">
+                    <div class="lesson-box" v-for="lesson in filteredData" :key="lesson.lessonId">
                         <div class="lesson-info">
                             <h3>{{ lesson.subject }}</h3>
                             <p>Location: {{ lesson.location }}</p>
@@ -91,7 +91,6 @@
                                 <img :src="`https://after-school-classes-backend.onrender.com/images/${item.image}`" alt="lesson image">
                             </div>
                         </div>
-                        <h2>Total price: ${{ totalPrice }}</h2>
                     </div>
                 </div>
                 
@@ -277,22 +276,25 @@
             computed: {
                 // Apply sorting based on the selected sort key and order
                 sortedLessons() {
-                    const modifier = this.sortOrder === 'asc' ? 1 : -1;  //to handle both ascending and descending order
+                    const modifier = this.sortOrder === 'asc' ? 1 : -1;  // Ascending or Descending modifier
 
                     return this.lessons.slice().sort((a, b) => {
                         // If the sort key is price, remove '$' and parse the numbers for comparison
                         if (this.sortKey === 'price') {
-                            const priceA = parseFloat(a[this.sortKey].replace('$', ''));
-                            const priceB = parseFloat(b[this.sortKey].replace('$', ''));
+                            const priceA = parseFloat(a[this.sortKey].replace('$', '').trim());  // Remove $ and parse the number
+                            const priceB = parseFloat(b[this.sortKey].replace('$', '').trim());  
                             return (priceA - priceB) * modifier;
                         }
 
-                        // Handle sorting for other types of data 
+                        // Handle sorting for other types of data (e.g., strings or numbers)
                         if (typeof a[this.sortKey] === 'string' && typeof b[this.sortKey] === 'string') {
+                            // Sorting string values
                             return a[this.sortKey].localeCompare(b[this.sortKey]) * modifier;
                         } else if (typeof a[this.sortKey] === 'number' && typeof b[this.sortKey] === 'number') {
+                            // Sorting numeric values
                             return (a[this.sortKey] - b[this.sortKey]) * modifier;
                         } else {
+                            // Handle mixed data types 
                             return 0;
                         }
                     });
@@ -307,9 +309,6 @@
                     const phoneValid = /^\d+$/.test(this.phone);   //only numbers
                     const emailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.email);
             return nameValid && phoneValid ;  // valid only if required fields valid 
-                },
-                totalPrice() {
-                    return this.cart.reduce((sum, item) => sum + Number(item.price), 0);
                 },
             }
 
